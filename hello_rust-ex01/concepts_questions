@@ -1,0 +1,8 @@
+
+1. Comment la fonction main en Rust diffère-t-elle de celle en C (signature, retour) ?
+
+
+2. Quels avantages y a-t-il à utiliser cargo plutôt que gcc pour un projet simple ?
+
+
+3. Pourquoi Rust impose-t-il une structure stricte de projet dès le départ ?
