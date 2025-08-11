@@ -1,0 +1,29 @@
+Exercise 1 : Structs and Methods
+
+1. What’s the difference between `&self` and `&mut self` in a method?
+
+&self : the struct associated will not be modified by the method / &mut self : allow to modify the struct
+&self is an immutable reference to the instance
+&mut self : mutable reference, we can modify fields
+self : takes the ownership : the methode will consume the instance 
+
+2. Why use a `struct` instead of a tuple here?
+
+the struct allow to use methods to access and or modify the struct
+the tuple must be deconstructed to be displayed and modified
+
+struct allow to name fields.
+struct can be used with methods, not tuple
+
+3. What happens if a `struct` field is left uninitialized?
+
+no compilation : all variables of struct must be initialized
+
+Rust requires a full initialization : ensure memory safety
+C accepts to compile with uninitializd fields
+
+4. Can a `struct` be made immutable after creation?
+
+Yes, declarating it let config = ... 
+the struct content won't be mutable
+by exposing pub fields or not providing mutating methods, the immutability would be improved
