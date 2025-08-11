@@ -1,0 +1,298 @@
+Prompt construit avec Claude : 
+
+**Contexte :**
+Tu es un mentor Rust expérimenté et pédagogue. J'ai une solide expérience en C et j'ai déjà maîtrisé les 3 premiers chapitres de la documentation Rust (ownership, variables, mutabilité, gestion des erreurs de base, et lecture d'entrée utilisateur avec std::io).
+
+**Objectif du projet :**
+Je souhaite développer un générateur de mots de passe en CLI utilisant la crate clap pour consolider mes acquis et découvrir de nouveaux concepts Rust de manière pratique.
+
+**Ce que j'attends de toi :**
+
+1. **Série d'exercices progressifs** : Conçois une progression d'exercices qui couvrent toutes les notions nécessaires à mon projet final, en partant de mon niveau actuel.
+
+2. **Pour chaque exercice, fournis :**
+   - **Objectif pédagogique** : Quel concept Rust spécifique cet exercice enseigne-t-il ?
+   - **Énoncé pratique** : Description claire de ce qu'il faut coder
+   - **Chapitres de référence** : Quels chapitres de la doc Rust consulter (avec numéros précis)
+   - **Questions de réflexion** : 3-4 questions pour approfondir ma compréhension des concepts abordés
+   - **Critères de réussite** : Comment savoir si j'ai bien réussi l'exercice
+
+3. **Structure suggérée :**
+   - Exercices isolés pour chaque concept (structs, enums, gestion d'erreurs avancée, traits, etc.)
+   - Exercices d'intégration progressive vers le projet final
+   - Exercice final : assemblage du générateur de mots de passe complet
+
+**Concepts probablement nécessaires à anticiper :**
+- Structs et méthodes
+- Enums et pattern matching
+- Gestion d'erreurs avec Result et Option
+- Traits et implémentations
+- Collections (Vec, HashMap, etc.)
+- Crates externes (clap, rand)
+- Tests unitaires
+- Organisation du code en modules
+
+**Format souhaité :**
+Structure tes réponses de manière claire avec des titres, du code d'exemple minimal, et des explications concises mais complètes.
+
+---
+
+*Note : J'ai accès à la documentation Rust complète en PDF que je consulterai en parallèle de tes recommandations.*
+
+## **Plan d’apprentissage en exercices**
+
+### **Exercice 1 — Structs et méthodes**
+
+**Objectif pédagogique**
+
+* Découvrir la création de `struct`, l’instanciation, et l’implémentation de méthodes avec `impl`.
+
+**Énoncé pratique**
+Crée un type `PasswordConfig` contenant :
+
+* longueur (`u8`)
+* booléens pour inclure minuscules, majuscules, chiffres, caractères spéciaux
+  Ajoute une méthode `describe()` qui imprime la configuration actuelle.
+
+**Chapitres de référence**
+
+* Chapitre 5 : Structs et méthodes
+* Chapitre 3.1 : Variables et mutabilité (pour réviser)
+
+**Questions de réflexion**
+
+1. Quelle est la différence entre `&self` et `&mut self` dans une méthode ?
+2. Pourquoi utiliser une `struct` plutôt qu’un tuple ici ?
+3. Que se passe-t-il si une valeur de `struct` n’est pas initialisée ?
+4. Peut-on rendre une `struct` immuable après sa création ?
+
+**Critères de réussite**
+
+* `PasswordConfig` est bien définie avec les bons champs.
+* Méthode `describe()` fonctionnelle et claire.
+* Code compilable et sans warnings.
+
+---
+
+### **Exercice 2 — Enums et `match`**
+
+**Objectif pédagogique**
+
+* Utiliser `enum` pour représenter des choix et `match` pour effectuer des actions selon ces choix.
+
+**Énoncé pratique**
+Crée un enum `Strength` avec les variantes `Weak`, `Medium`, `Strong`.
+Ajoute une fonction `strength_label()` qui retourne une chaîne descriptive selon la variante.
+
+**Chapitres de référence**
+
+* Chapitre 6 : Enums et pattern matching
+* Chapitre 19 : Patterns avancés (plus tard, pour approfondir)
+
+**Questions de réflexion**
+
+1. Quelle est la différence entre un `match` exhaustif et un `if let` ?
+2. Pourquoi un `match` sur un `enum` est-il sûr à la compilation ?
+3. Comment ajouter une donnée associée à une variante (`enum` avec payload) ?
+4. Que se passe-t-il si on ajoute une variante à l’`enum` sans modifier le `match` ?
+
+**Critères de réussite**
+
+* Enum bien défini et utilisé.
+* `match` exhaustif, pas de `_` par défaut inutile.
+* Fonction retournant les bonnes valeurs selon la variante.
+
+---
+
+### **Exercice 3 — Gestion d’erreurs avec `Result` et `Option`**
+
+**Objectif pédagogique**
+
+* Manipuler `Result` et `Option` avec `match`, `unwrap`, `expect` et opérateur `?`.
+
+**Énoncé pratique**
+Écris une fonction `read_length_from_file(path: &str) -> Result<u8, String>`
+
+* Le fichier contient un nombre (longueur de mot de passe).
+* Si le fichier est introuvable ou le contenu invalide, retourne une erreur descriptive.
+
+**Chapitres de référence**
+
+* Chapitre 9 : Gestion d’erreurs
+* Chapitre 6.2 : `match` sur des enums
+
+**Questions de réflexion**
+
+1. Pourquoi `unwrap` est-il risqué ?
+2. Quelle est la différence entre `expect` et un `match` manuel ?
+3. Que fait l’opérateur `?` exactement ?
+4. Dans quel cas `Option` est préférable à `Result` ?
+
+**Critères de réussite**
+
+* Gestion des erreurs claire et lisible.
+* Pas de panique (`panic!`) non justifiée.
+* Fonction testée avec fichier valide, invalide et manquant.
+
+---
+
+### **Exercice 4 — Collections (`Vec`, `HashMap`)**
+
+**Objectif pédagogique**
+
+* Manipuler `Vec` pour stocker et transformer des caractères disponibles pour le mot de passe.
+
+**Énoncé pratique**
+Crée un `Vec<char>` contenant tous les caractères possibles selon la config (`PasswordConfig`).
+Affiche le contenu du vecteur.
+
+**Chapitres de référence**
+
+* Chapitre 8 : Collections
+* Chapitre 13 : Itérateurs (pour aller plus loin)
+
+**Questions de réflexion**
+
+1. Quelle est la différence entre `push` et `extend` ?
+2. Pourquoi choisir `Vec<char>` plutôt que `String` pour manipuler un alphabet ?
+3. Quelles sont les implications mémoire d’un `Vec` dynamique ?
+4. Comment itérer sans prendre possession des éléments ?
+
+**Critères de réussite**
+
+* `Vec` construit correctement selon la config.
+* Pas de duplication inutile de code.
+* Itération fonctionnelle.
+
+---
+
+### **Exercice 5 — Utilisation de crates externes (`rand`)**
+
+**Objectif pédagogique**
+
+* Ajouter et utiliser une crate externe pour générer des caractères aléatoires.
+
+**Énoncé pratique**
+À partir du `Vec<char>` de l’exercice 4, génère un mot de passe aléatoire d’une longueur donnée.
+Utilise `rand::seq::SliceRandom` ou `rand::Rng`.
+
+**Chapitres de référence**
+
+* Chapitre 2 : utilisation de crate externe (`rand`)
+* Chapitre 14 : Cargo et dépendances
+
+**Questions de réflexion**
+
+1. Quelle est la différence entre `thread_rng` et `StdRng` ?
+2. Pourquoi est-il important de mettre à jour la crate `rand` régulièrement ?
+3. Quels sont les risques d’un générateur aléatoire non cryptographique ?
+4. Comment documenter la dépendance dans `Cargo.toml` ?
+
+**Critères de réussite**
+
+* Mot de passe généré correctement.
+* Code utilisant la crate `rand` sans warnings.
+* Longueur correcte et respect de la config.
+
+---
+
+### **Exercice 6 — Organisation du code en modules**
+
+**Objectif pédagogique**
+
+* Structurer un projet Rust en modules (`mod`, `pub`).
+
+**Énoncé pratique**
+Sépare ton code :
+
+* `config.rs` pour la `struct PasswordConfig`
+* `generator.rs` pour la logique de génération
+* `main.rs` pour le CLI
+
+**Chapitres de référence**
+
+* Chapitre 7 : Modules et visibilité
+* Chapitre 14 : Organisation de projet
+
+**Questions de réflexion**
+
+1. Pourquoi utiliser `pub` sur certaines fonctions/structs ?
+2. Quelle est la différence entre `mod` et `use` ?
+3. Comment éviter les dépendances circulaires entre modules ?
+4. Que fait `super::` dans un chemin ?
+
+**Critères de réussite**
+
+* Projet organisé et compilable.
+* Modules séparés logiquement.
+* Imports clairs.
+
+---
+
+### **Exercice 7 — CLI avec `clap`**
+
+**Objectif pédagogique**
+
+* Utiliser `clap` pour créer un parser d’arguments en ligne de commande.
+
+**Énoncé pratique**
+Implémente un CLI qui accepte :
+
+* `--length <n>`
+* `--upper` / `--no-upper`
+* `--digits` / `--no-digits`
+* `--specials` / `--no-specials`
+
+**Chapitres de référence**
+
+* Chapitre 14 : Crates et dépendances
+* Documentation de `clap`
+
+**Questions de réflexion**
+
+1. Pourquoi préférer `clap` à un parsing manuel des arguments ?
+2. Quelles sont les bonnes pratiques pour nommer les options CLI ?
+3. Comment fournir une aide (`--help`) automatiquement ?
+4. Que se passe-t-il si un argument obligatoire est omis ?
+
+**Critères de réussite**
+
+* CLI fonctionnel avec `clap`.
+* Arguments correctement mappés dans `PasswordConfig`.
+* Messages d’aide clairs.
+
+---
+
+### **Exercice final — Générateur complet**
+
+**Objectif pédagogique**
+
+* Intégrer tous les concepts dans un projet complet, robuste et maintenable.
+
+**Énoncé pratique**
+Assembler tout :
+
+* Parsing des arguments avec `clap`
+* Création de `PasswordConfig`
+* Génération sécurisée du mot de passe
+* Affichage final
+
+**Chapitres de référence**
+
+* Tous les précédents
+* Chapitre 11 : Tests unitaires
+
+**Questions de réflexion**
+
+1. Quelles améliorations de sécurité ajouterais-tu (cryptographie, entropie) ?
+2. Comment structurer le code pour ajouter d’autres modes de génération ?
+3. Quels tests automatisés écrire pour valider la génération ?
+4. Comment packager l’outil pour distribution ?
+
+**Critères de réussite**
+
+* Code compilable sans warnings.
+* CLI complet et ergonomique.
+* Tests unitaires valides.
+* Respect des bonnes pratiques Rust.
+

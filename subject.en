@@ -1,0 +1,315 @@
+
+Context:
+You are an experienced and pedagogical Rust mentor. I have a solid background in C and have already mastered the first 3 chapters of the Rust documentation (ownership, variables, mutability, basic error handling, and reading user input with std::io).
+
+Project Goal:
+I want to develop a CLI password generator using the clap crate to consolidate my current knowledge and discover new Rust concepts in a practical way.
+
+What I expect from you:
+
+Series of progressive exercises: Design a sequence of exercises that cover all the concepts needed for my final project, starting from my current level.
+
+For each exercise, provide:
+
+Learning objective: Which specific Rust concept does this exercise teach?
+
+Practical statement: A clear description of what needs to be coded
+
+Reference chapters: Which chapters of the Rust documentation to consult (with precise numbers)
+
+Reflection questions: 3–4 questions to deepen my understanding of the covered concepts
+
+Success criteria: How to know if I have completed the exercise successfully
+
+Suggested structure:
+
+Isolated exercises for each concept (structs, enums, advanced error handling, traits, etc.)
+
+Progressive integration exercises leading toward the final project
+
+Final exercise: assembling the complete password generator
+
+Likely necessary concepts to anticipate:
+
+Structs and methods
+
+Enums and pattern matching
+
+Error handling with Result and Option
+
+Traits and implementations
+
+Collections (Vec, HashMap, etc.)
+
+External crates (clap, rand)
+
+Unit testing
+
+Organizing code into modules
+
+Desired format:
+Structure your responses clearly with titles, minimal example code, and concise but complete explanations.
+
+
+Perfect, with your background in C and your mastery of chapters 1 to 3 of the Rust Book, we can build a progressive series of exercises that will lead you step-by-step to your CLI password generator using `clap`.
+Here’s the **progression** I suggest.
+
+---
+
+## **Learning Plan in Exercises**
+
+### **Exercise 1 — Structs and Methods**
+
+**Learning objective**
+
+* Learn how to create a `struct`, instantiate it, and implement methods using `impl`.
+
+**Practical task**
+Create a type `PasswordConfig` containing:
+
+* length (`u8`)
+* booleans for including lowercase, uppercase, digits, special characters
+  Add a `describe()` method that prints the current configuration.
+
+**Reference chapters**
+
+* Chapter 5: Structs and Methods
+* Chapter 3.1: Variables and Mutability (as a review)
+
+**Reflection questions**
+
+1. What’s the difference between `&self` and `&mut self` in a method?
+2. Why use a `struct` instead of a tuple here?
+3. What happens if a `struct` field is left uninitialized?
+4. Can a `struct` be made immutable after creation?
+
+**Success criteria**
+
+* `PasswordConfig` is correctly defined with the right fields.
+* `describe()` method works and outputs the expected description.
+* Code compiles without warnings.
+
+---
+
+### **Exercise 2 — Enums and `match`**
+
+**Learning objective**
+
+* Use `enum` to represent choices and `match` to take actions based on them.
+
+**Practical task**
+Create an enum `Strength` with variants `Weak`, `Medium`, `Strong`.
+Add a function `strength_label()` that returns a descriptive string for each variant.
+
+**Reference chapters**
+
+* Chapter 6: Enums and Pattern Matching
+* Chapter 19: Advanced Patterns (later, for deeper understanding)
+
+**Reflection questions**
+
+1. What’s the difference between exhaustive `match` and `if let`?
+2. Why is `match` on an `enum` compile-time safe?
+3. How can you add associated data to a variant (payload enums)?
+4. What happens if you add a variant to the `enum` but don’t update the `match`?
+
+**Success criteria**
+
+* Enum is well-defined and used correctly.
+* `match` is exhaustive, with no unnecessary `_` default arm.
+* Function returns correct values for each variant.
+
+---
+
+### **Exercise 3 — Error Handling with `Result` and `Option`**
+
+**Learning objective**
+
+* Work with `Result` and `Option` using `match`, `unwrap`, `expect`, and the `?` operator.
+
+**Practical task**
+Write a function `read_length_from_file(path: &str) -> Result<u8, String>`
+
+* The file contains a number (password length).
+* If the file is missing or content is invalid, return a descriptive error.
+
+**Reference chapters**
+
+* Chapter 9: Error Handling
+* Chapter 6.2: `match` on enums
+
+**Reflection questions**
+
+1. Why is `unwrap` risky?
+2. What’s the difference between `expect` and a manual `match`?
+3. What exactly does the `?` operator do?
+4. When is `Option` preferable over `Result`?
+
+**Success criteria**
+
+* Clear, readable error handling.
+* No unjustified `panic!`.
+* Function tested with valid, invalid, and missing file cases.
+
+---
+
+### **Exercise 4 — Collections (`Vec`, `HashMap`)**
+
+**Learning objective**
+
+* Work with `Vec` to store and transform the available characters for the password.
+
+**Practical task**
+Create a `Vec<char>` containing all possible characters according to `PasswordConfig`.
+Print the contents of the vector.
+
+**Reference chapters**
+
+* Chapter 8: Collections
+* Chapter 13: Iterators (for going further)
+
+**Reflection questions**
+
+1. What’s the difference between `push` and `extend`?
+2. Why choose `Vec<char>` instead of `String` for the alphabet?
+3. What are the memory implications of a dynamic `Vec`?
+4. How can you iterate without taking ownership of the elements?
+
+**Success criteria**
+
+* `Vec` built correctly based on the config.
+* No unnecessary code duplication.
+* Functional iteration.
+
+---
+
+### **Exercise 5 — Using External Crates (`rand`)**
+
+**Learning objective**
+
+* Add and use an external crate to generate random characters.
+
+**Practical task**
+From the `Vec<char>` in Exercise 4, generate a random password of a given length.
+Use `rand::seq::SliceRandom` or `rand::Rng`.
+
+**Reference chapters**
+
+* Chapter 2: Using external crates (`rand`)
+* Chapter 14: Cargo and dependencies
+
+**Reflection questions**
+
+1. What’s the difference between `thread_rng` and `StdRng`?
+2. Why is it important to regularly update the `rand` crate?
+3. What are the risks of a non-cryptographic random generator?
+4. How do you document the dependency in `Cargo.toml`?
+
+**Success criteria**
+
+* Password generated correctly.
+* Code uses `rand` crate without warnings.
+* Correct length and config respected.
+
+---
+
+### **Exercise 6 — Organizing Code into Modules**
+
+**Learning objective**
+
+* Structure a Rust project into modules (`mod`, `pub`).
+
+**Practical task**
+Split your code:
+
+* `config.rs` for the `PasswordConfig`
+* `generator.rs` for the generation logic
+* `main.rs` for the CLI
+
+**Reference chapters**
+
+* Chapter 7: Modules and Visibility
+* Chapter 14: Project organization
+
+**Reflection questions**
+
+1. Why use `pub` on some functions/structs?
+2. What’s the difference between `mod` and `use`?
+3. How to avoid circular dependencies between modules?
+4. What does `super::` mean in a path?
+
+**Success criteria**
+
+* Project organized and compilable.
+* Modules separated logically.
+* Clear imports.
+
+---
+
+### **Exercise 7 — CLI with `clap`**
+
+**Learning objective**
+
+* Use `clap` to create a command-line argument parser.
+
+**Practical task**
+Implement a CLI that accepts:
+
+* `--length <n>`
+* `--upper` / `--no-upper`
+* `--digits` / `--no-digits`
+* `--specials` / `--no-specials`
+
+**Reference chapters**
+
+* Chapter 14: Crates and dependencies
+* `clap` documentation
+
+**Reflection questions**
+
+1. Why prefer `clap` over manual argument parsing?
+2. What are best practices for naming CLI options?
+3. How to provide help (`--help`) automatically?
+4. What happens if a required argument is omitted?
+
+**Success criteria**
+
+* CLI functional with `clap`.
+* Arguments correctly mapped to `PasswordConfig`.
+* Clear help messages.
+
+---
+
+### **Final Exercise — Complete Generator**
+
+**Learning objective**
+
+* Integrate all concepts into a complete, robust, and maintainable project.
+
+**Practical task**
+Assemble everything:
+
+* Argument parsing with `clap`
+* Creating `PasswordConfig`
+* Secure password generation
+* Final output
+
+**Reference chapters**
+
+* All previous chapters
+* Chapter 11: Unit testing
+
+**Reflection questions**
+
+1. What security improvements would you add (cryptography, entropy)?
+2. How would you structure the code to add more generation modes?
+3. What automated tests would you write to validate generation?
+4. How would you package the tool for distribution?
+
+**Success criteria**
+
+* Code compiles without warnings.
+* Complete and ergonomic CLI.
+* Valid unit tests.
+* Good Rust practices followed.
+
