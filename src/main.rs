@@ -1,8 +1,28 @@
 use std::fs;
 use std::error::Error;
+use rand::prelude::IndexedRandom;
+use rand::rng; // not in std 
+
+const LOWERCASE: [char; 26] = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
+    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
+    'u', 'v', 'w', 'x', 'y', 'z',
+];
+
+const UPPERCASE: [char; 26] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+    'U', 'V', 'W', 'X', 'Y', 'Z',
+];
+
+const DIGIT: [char; 10] = ['0', '1', '2', '3', '4',
+    '5', '6', '7', '8', '9'];
+
+const SYMBOL: [char; 10] = ['!', '@', '#', '$', '%',
+    '^', '&', '*', '(', ')'];
 
 struct PasswordConfig {
-    length: u8,
+    length: usize,
     lowercase: bool,
     uppercase: bool,
     digit: bool,
@@ -19,6 +39,39 @@ impl PasswordConfig {
     }
 }
 
+fn which_key(key: &str, value: &str, config: &mut PasswordConfig) -> Result<(), Box<dyn Error>> { 
+
+    let key = key.trim();
+    let value = value.trim();
+
+    match key {
+        "length" => {
+            config.length = value.parse()?; // pas besoin de mettre parse::<u8>() ici ?
+            Ok(())
+        }
+        "lowercase" => {
+            config.lowercase = value.parse()?;
+            Ok(())
+        }
+        "uppercase" => {
+            config.uppercase = value.parse()?;
+            Ok(())
+        }
+        "digit" => {
+            config.digit = value.parse()?;
+            Ok(())
+        }
+        "symbol" => {
+            config.symbol = value.parse()?;
+            Ok(())
+        }
+        _ => {
+            return Err(format!("Error : unknown key {key}").into());
+        }
+    }
+
+}
+
 fn get_value_from_line(line: &str, config: &mut PasswordConfig) -> Result<(), Box<dyn Error>> {
     
     let line = line.trim();
@@ -27,45 +80,40 @@ fn get_value_from_line(line: &str, config: &mut PasswordConfig) -> Result<(), Bo
             return Ok(());
         }
 
-        // if let Some((key, value)) est une forme de déstructuration pattern matching.
-        // "Si mon Option (retournee par split_once) est Some((x, y)), mets x dans key et y dans value et exécute le bloc".
-
         if let Some((key, value)) = line.split_once('=') {
-
-            let key = key.trim();
-            let value = value.trim();
-
-            match key {
-                "length" => {
-                    config.length = value.parse()? // pas besoin de mettre parse::<u8>() ici ?
-                }
-                "lowercase" => {
-                    config.lowercase = value.parse()?
-                }
-                "uppercase" => {
-                    config.uppercase = value.parse()?
-                }
-                "digit" => {
-                    config.digit = value.parse()?
-                }
-                "symbol" => {
-                    config.symbol = value.parse()?
-                }
-                _ => {
-                    return Err(format!("Error : unknown key {key}").into());
-                }
-            }
+            
+            which_key(key, value, config)?;
         } else {
             return Err(format!("Error : invalid line : {line}").into())
         }
     Ok(())
 }
 
-//Synthesis ex0..=3 : 
-//write a program that read in a config file to fill a struct containing the configuration to
-//generate a passwrod 
-//errors must be handled
-//no warning at compile, no panic allowed
+fn fill_charset(config: &PasswordConfig)
+    -> Result<Vec<char>, Box<dyn std::error::Error>>
+{
+    let mut charset: Vec<char> = Vec::new();
+    if config.lowercase {
+        charset.extend_from_slice(&LOWERCASE);
+    }
+    if config.uppercase {
+        charset.extend_from_slice(&UPPERCASE);
+    }
+    if config.digit {
+        charset.extend_from_slice(&DIGIT);
+    }
+    if config.symbol {
+        charset.extend_from_slice(&SYMBOL);
+    }
+
+    if charset.is_empty() {
+        return Err("Charset empty".into());
+    }
+
+    println!("charset : {:?}", charset);
+    Ok(charset)
+}
+
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 
@@ -84,64 +132,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // println!("{line}");
         get_value_from_line(line, &mut config)?;
     }
-
     config.describe();
+
+    let mut _rng = rng();
+
+    let mut password = String::with_capacity(config.length);
+
+    let charset = fill_charset(&config)?;
+
+    for _ in 0..config.length {
+
+        if let Some(&c) = charset.choose(&mut _rng) {
+            password.push(c);
+        }
+    }
+    println!("Generated password : {password}");
     Ok(())
 }
-
-
-//Doc :
-//
-//- Box<dyn std::error::Error> : 
-//
-// if let Some((key, value)) est une forme de déstructuration pattern matching.
-// "Si mon Option (retournee par split_once) est Some((x, y)), mets x dans key et y dans value et exécute le bloc".
-//
-// c'est un type d'erreur dynamique "empaquete" dans un Box
-//une sorte de pointeur vers une zone mémoire sur la heap. 
-//La fonction peut retourner n'importe quel type d'erreur qui implémente le trait std::error::Error,
-//sans connaître à la compilation le type exact de cette erreur.
-//
-//Utile pour gerer des erreurs de differents types en meme temps
-
-
-//- .into() : 
-//une methode qui permet de convertir un type en un autre. Ici utilise pour renvoyer l'erreur et le
-//combiner avec Box<dyn std::error::Error>
-
-
-//-  Some() : 
-// une variante de l'énumération Option<T> : Some(value) / None 
-// Utile pour savoir si une option retournee contient une valuer ou None et gerer le cas du retour
-// NULL qui n'est pas a prendre comme une erreur
-//Some() est une forme de conteneur qui représente la présence d'une valeur dans un contexte où elle peut être optionnelle,
-//via l'énumération Option<T> en Rust.
-//Cela facilite la gestion sûre et explicite des cas où des données peuvent ne pas exister.
-
-
-//String vs &str :
-//
-//String est un type propriétaire (owned type) :
-//
-// Il possède et gère son propre espace mémoire, alloué sur le tas (heap).
-//
-// C’est un type mutable, dont la taille peut changer à l’exécution (on peut l’agrandir ou le modifier).
-//
-// Il contient un pointeur vers les données, la longueur actuelle, et la capacité allouée.
-//
-// Utile quand on veut construire, modifier ou posséder une chaîne de caractères.
-//
-// Ex : let mut s = String::from("Bonjour"); s.push_str(" le monde");
-//
-//
-// &str est une vue (slice) non propriétaire, généralement immuable :
-//
-// C’est une référence vers une séquence de caractères UTF-8 stockée ailleurs (ex: dans un String ou dans un littéral de chaîne).
-//
-// Sa taille est fixe (immutable), on ne peut pas la modifier ni changer sa longueur.
-//
-// Elle contient un pointeur vers les données et leur longueur, mais ne possède pas l’allocation mémoire.
-//
-// Utile pour passer des chaînes en lecture seule, par exemple en argument de fonction.
-//
-// Ex : let s: &str = "Bonjour"; ou let slice = &s[0..3]; où s est un String.
