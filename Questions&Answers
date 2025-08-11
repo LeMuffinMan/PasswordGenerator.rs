@@ -27,3 +27,63 @@ C accepts to compile with uninitializd fields
 Yes, declarating it let config = ... 
 the struct content won't be mutable
 by exposing pub fields or not providing mutating methods, the immutability would be improved
+
+===================================================================================
+
+Exercise 2 : Enums and match
+
+1. What’s the difference between exhaustive `match` and `if let`?
+
+match has arms that covers all cases, with a default arm _ if needed
+if let : target one specific case
+
+2. Why is `match` on an `enum` compile-time safe?
+
+We can cover all cases of the enum with the match, so we don't need any default _ arm
+
+3. How can you add associated data to a variant (payload enums)?
+
+for each member of the enum, indicate in parenthesis the data and its type :
+
+enum MyEnum {
+  A (i32),
+  B (bool, String),
+  C (x: f64),
+}
+
+4. What happens if you add a variant to the `enum` but don’t update the `match`?
+
+It would not compile
+
+
+===================================================================================
+
+Exercise 3 : error handling 
+
+1. Why is `unwrap` risky?
+
+like expect() : could cause the program to panic
+expect("Error msg") does the same, but help to debug thanks to the msg
+
+2. What’s the difference between `expect` and a manual `match`?
+
+expect() panic, the match cover all cases and allow to save the error 
+
+3. What exactly does the `?` operator do?
+
+instead of match, allow to save the error without paniquing. Makes the code more concise
+it does an "early return" of the error or None
+
+4. When is `Option` preferable over `Result`?
+
+If we iterate on an array, to find a matching value, there could be a return value, or not.
+With Option, we can return Some(value_found), OR we can return None if we don't find the value
+With result : we can return the value, or a string to describe an error (can we return both ?)
+if the fact that we didnt found our value in the array is to consider as an error : use Result, if it's not to consider as an error, use Option
+
+Option does not allowed to have infos on a potential error
+Result does allow it
+
+=================================================================================================================================
+
+
