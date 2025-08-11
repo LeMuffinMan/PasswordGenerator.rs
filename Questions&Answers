@@ -82,7 +82,7 @@ With result : we can return the value, or a string to describe an error (can we 
 if the fact that we didnt found our value in the array is to consider as an error : use Result, if it's not to consider as an error, use Option
 
 Option does not allowed to have infos on a potential error
-Result does allow it
+Result does 
 
 =================================================================================================================================
 
