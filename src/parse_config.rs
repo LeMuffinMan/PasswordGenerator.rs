@@ -25,6 +25,10 @@ pub struct PasswordConfig {
     pub uppercase: bool,
     pub digit: bool,
     pub symbol: bool,
+    pub duplicate: bool,
+    pub debug: bool,
+    pub entropy: bool,
+    pub json: bool,
 }
 
 impl PasswordConfig {
@@ -34,6 +38,11 @@ impl PasswordConfig {
         println!("uppercase = {}", self.uppercase);
         println!("digit = {}", self.digit);
         println!("symbol = {}", self.symbol);
+        println!("duplicate = {}", self.duplicate);
+        println!("debug = {}", self.debug);
+        println!("entropy = {}", self.entropy);
+        println!("json = {}", self.json);
+        println!("");
     }
 }
 
@@ -63,6 +72,22 @@ fn which_key(key: &str, value: &str, config: &mut PasswordConfig) -> Result<(), 
             config.symbol = value.parse()?;
             Ok(())
         }
+        "allow_duplicate" => {
+            config.duplicate = value.parse()?;
+            Ok(())
+        }
+        "debug" => {
+            config.debug = value.parse()?;
+            Ok(())
+        }
+        "entropy" => {
+            config.entropy = value.parse()?;
+            Ok(())
+        }
+        "json" => {
+            config.json = value.parse()?;
+            Ok(())
+        }
         _ => {
             return Err(format!("Error : unknown key {key}").into());
         }
@@ -79,7 +104,6 @@ pub fn get_value_from_line(line: &str, config: &mut PasswordConfig) -> Result<()
         }
 
         if let Some((key, value)) = line.split_once('=') {
-            
             which_key(key, value, config)?;
         } else {
             return Err(format!("Error : invalid line : {line}").into())
@@ -108,6 +132,5 @@ pub fn fill_charset(config: &PasswordConfig)
         return Err("Charset empty".into());
     }
 
-    println!("charset : {:?}", charset);
     Ok(charset)
 }

@@ -34,27 +34,30 @@ fn get_entropy(config: &mut PasswordConfig, charset: &Vec<char>) -> f64 {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     //Todo : 
-    //- parsing TOML
-    //- entropy option in CLI
-    //- debug mode pour les infos ?
+    //- parsing TOML : serde
     //- flag json pour la sortie
+    //- cli : debug entropy json
     //- tests unitaires ?
     //
-    //- passphrases ? wordlist embed (EFF large)
     //- audit de bruteforce 
     //- integration bitwarden
+    //- passphrases ? wordlist embed (EFF large)
     
     //
-    //PasswordConfig mutable :
-    //- default values 
+    //PasswordConfig mutable for override:
+    //- default strong values 
     //- modified if a config.txt is found
-    //- modified if arguments are found
+    //- modified if arguments are provided
     let mut config = PasswordConfig {
         length: 15,
         lowercase: true,
         uppercase: true,
         digit: true,
         symbol: true,
+        duplicate: false,
+        debug: true,
+        entropy: true,
+        json: true,
     };
 
     //values found in toml config file will override the defaults value
@@ -62,21 +65,39 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let cli = Cli::parse();
 
-    //Values we got through args will override config.toml ones 
+    //Values we got through parse() will override config.toml ones 
     cli.get_args_override(&mut config);
+    
+    if config.length == 0 {
+        return Err("Error : length = 0".into());
+    }
 
-    config.describe();
+    if config.debug {
+        config.describe();
+    }
 
     //fill charset with PasswordConfig infos
     let charset = fill_charset(&config)?;
 
-    if charset.is_empty() {
-        return Err("Not enough char in charset".into());
+    if config.debug {
+        println!("charset : {:?}", charset);
     }
 
-    let password = generation(&charset, config.length);
+    if charset.is_empty() {
+        return Err("Eroor : charset is empty".into());
+    }
+
+    if config.length as usize > charset.len() {
+        return Err("Warning : Charset is too small to guarantee no duplicated char".into());
+    }
+
+    let password = generation(&charset, config.length, config.duplicate);
     println!("\nGenerated password : {password}");
+
     let entropy = get_entropy(&mut config, &charset);
-    println!("\nentropy = {entropy}");
+    if config.entropy {
+        println!("\nentropy = {entropy}");
+    }
+
     Ok(())
 }

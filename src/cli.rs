@@ -3,7 +3,7 @@ use crate::parse_config::PasswordConfig;
 
 #[derive(Parser)]
 #[command(name = "PasswordGenerator.rs")]
-#[command(about = "a simple CLI to generate passwords")]
+#[command(about = "A simple CLI to generate passwords")]
 #[command(version, about, long_about = None)]
 
 pub struct Cli
@@ -32,6 +32,7 @@ impl Cli {
             config.uppercase = cs.contains('u');
             config.digit = cs.contains('d');
             config.symbol = cs.contains('s');
+            //flags entropy debug et json
         }
     }
 }

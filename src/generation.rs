@@ -4,7 +4,7 @@ use rand::prelude::IndexedRandom;
 //type &[char] allow to use charset without consuming it ?
 //it's a slice, it's borrowing
 //may i want to consume it once i used it in this function ?
-pub fn generation(charset: &[char], length: u8) -> String {
+pub fn generation(charset: &[char], length: u8, duplicate: bool) -> String {
 
     //declare an instance of random number generator
     //not needed using thread_rng ?
@@ -13,11 +13,15 @@ pub fn generation(charset: &[char], length: u8) -> String {
     //Declaring a new empty String
     let mut password = String::with_capacity(length as usize);
 
-    for _ in 0..length {
-
+    while password.len() < length as usize {
         if let Some(&c) = charset.choose(&mut _rng) {
-            password.push(c); //add at the end
+                if !duplicate {
+                    if password.contains(c) {
+                        continue;
+                    }
+                }
+                password.push(c); //add at the end
+            } 
         }
-    }
     password
-} 
+}
