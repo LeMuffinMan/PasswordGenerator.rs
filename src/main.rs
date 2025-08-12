@@ -24,8 +24,27 @@ fn from_file(config: &mut PasswordConfig) {
     }
 }
 
+fn get_entropy(config: &mut PasswordConfig, charset: &Vec<char>) -> f64 {
+    
+    let charset_size: f64 = charset.len() as f64;
+    let entropy: f64 = config.length as f64 * charset_size.log2();
+    entropy
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 
+    //Todo : 
+    //- parsing TOML
+    //- entropy option in CLI
+    //- debug mode pour les infos ?
+    //- flag json pour la sortie
+    //- tests unitaires ?
+    //
+    //- passphrases ? wordlist embed (EFF large)
+    //- audit de bruteforce 
+    //- integration bitwarden
+    
+    //
     //PasswordConfig mutable :
     //- default values 
     //- modified if a config.txt is found
@@ -57,5 +76,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let password = generation(&charset, config.length);
     println!("\nGenerated password : {password}");
+    let entropy = get_entropy(&mut config, &charset);
+    println!("\nentropy = {entropy}");
     Ok(())
 }
