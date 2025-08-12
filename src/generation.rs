@@ -19,6 +19,5 @@ pub fn generation(charset: &[char], length: u8) -> String {
             password.push(c); //add at the end
         }
     }
-    println!("Generated password : {password}");
     password
 } 
