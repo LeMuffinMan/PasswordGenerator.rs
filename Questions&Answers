@@ -151,12 +151,20 @@ declaring it as public is struct and fcts can be used outside of the file
 
 mod indicate the crate to find in the project structure
 use indicate the struct or the function to use from the crate
+use bring funct or struct into scope 
 
 3. How to avoid circular dependencies between modules?
 
 organizing coherently the files 
 
+Better strategies:
+
+Hierarchical structure: Parent modules can use child modules, but not vice versa
+Extract common code: Put shared functionality in a separate module both can use
+Dependency inversion: Use traits to break direct dependencies
+
 4. What does `super::` mean in a path?
 
-?
+super:: refers to the parent module in the module hierarchy:
+
 

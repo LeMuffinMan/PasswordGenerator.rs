@@ -1,6 +1,5 @@
-use std::error::Error;
 
-// mod parse_config;
+use std::error::Error;
 
 const LOWERCASE: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
@@ -21,7 +20,7 @@ const SYMBOL: [char; 10] = ['!', '@', '#', '$', '%',
     '^', '&', '*', '(', ')'];
 
 pub struct PasswordConfig {
-    pub length: usize,
+    pub length: u8,
     pub lowercase: bool,
     pub uppercase: bool,
     pub digit: bool,
