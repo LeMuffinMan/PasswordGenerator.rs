@@ -86,4 +86,77 @@ Result does
 
 =================================================================================================================================
 
+Exercice 4 : Collections
+
+1. What’s the difference between `push` and `extend`?
+
+push: add one element at then end of vector
+extend: Adds multiple elements (from any iterable) to the end of a vector.
+
+2. Why choose `Vec<char>` instead of `String` for the alphabet?
+
+Vec is usefull to manipulate individual elements. 
+String would have been less efficient for manipulation and transformation of charset
+
+3. What are the memory implications of a dynamic `Vec`?
+
+On the heap : at runtime, it can grows capacity if needed
+but /!\ : Memory usage is proportional to the number of elements and the element size. With Vec<char>, each char is typically 4 bytes (Rust char is Unicode scalar, not a byte).
+
+4. How can you iterate without taking ownership of the elements?
+
+using reference & :
+
+for char in &charset {
+  println!("{}", ch);
+}
+
+=======================================================================================
+
+Exercise 5 : Using External Crate
+
+1. What’s the difference between `thread_rng` and `StdRng`?
+
+I ended to use rng because cargo flagged thread_rng as deprecated
+thread_rng / rng are built for cryptographym StdRng is not ?
+thread_rng / rng does not need a seed.
+Stdrng would be usefull if i want the reproductibility of my random, using the seed
+
+2. Why is it important to regularly update the `rand` crate?
+
+To maintain dependances updated
+important for cryptography security
+benefit the last optimisations
+compatibility with other dependances
+
+3. What are the risks of a non-cryptographic random generator?
+
+posibility to find the seed and deduce the password generation logic
+
+4. How do you document the dependency in `Cargo.toml`?
+
+in the .toml, under [dependencies]
+crate <version> 
+
+rand "0.9.2"
+
+
+======================================================================
+
+1. Why use `pub` on some functions/structs?
+
+declaring it as public is struct and fcts can be used outside of the file
+
+2. What’s the difference between `mod` and `use`?
+
+mod indicate the crate to find in the project structure
+use indicate the struct or the function to use from the crate
+
+3. How to avoid circular dependencies between modules?
+
+organizing coherently the files 
+
+4. What does `super::` mean in a path?
+
+?
 
