@@ -1,9 +1,11 @@
 use std::fs;
 
-use rand::prelude::IndexedRandom;
-use rand::rng; // not in std 
+// use rand::prelude::IndexedRandom;
 
 mod parse_config; //first include the module
+mod generation;
+
+use generation::generation;
 
 use parse_config::get_value_from_line;
 use parse_config::fill_charset;
@@ -32,21 +34,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     config.describe();
 
-    //declare an instance of random number generator
-    let mut _rng = rng();
-
-    //Declaring a new empty String
-    let mut password = String::with_capacity(config.length);
-
     //fill charset with PasswordConfig infos
     let charset = fill_charset(&config)?;
 
-    for _ in 0..config.length {
-
-        if let Some(&c) = charset.choose(&mut _rng) {
-            password.push(c); //add at the end
-        }
+    if charset.is_empty() {
+        return Err("Not enough char in charset".into());
     }
-    println!("Generated password : {password}");
+
+    generation(&charset, config.length);
+
     Ok(())
 }
