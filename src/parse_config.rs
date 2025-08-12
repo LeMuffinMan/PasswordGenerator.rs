@@ -44,7 +44,7 @@ fn which_key(key: &str, value: &str, config: &mut PasswordConfig) -> Result<(), 
 
     match key {
         "length" => {
-            config.length = value.parse()?; // pas besoin de mettre parse::<u8>() ici ?
+            config.length = value.parse()?;
             Ok(())
         }
         "lowercase" => {
