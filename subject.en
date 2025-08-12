@@ -153,33 +153,33 @@ Write a function `read_length_from_file(path: &str) -> Result<u8, String>`
 
 ---
 
-### **Exercise 4 — Collections (`Vec`, `HashMap`)**
+### **exercise 4 — collections (`vec`, `hashmap`)**
 
-**Learning objective**
+**learning objective**
 
-* Work with `Vec` to store and transform the available characters for the password.
+* work with `vec` to store and transform the available characters for the password.
 
-**Practical task**
-Create a `Vec<char>` containing all possible characters according to `PasswordConfig`.
-Print the contents of the vector.
+**practical task**
+create a `vec<char>` containing all possible characters according to `passwordconfig`.
+print the contents of the vector.
 
-**Reference chapters**
+**reference chapters**
 
-* Chapter 8: Collections
-* Chapter 13: Iterators (for going further)
+* chapter 8: collections
+* chapter 13: iterators (for going further)
 
-**Reflection questions**
+**reflection questions**
 
-1. What’s the difference between `push` and `extend`?
-2. Why choose `Vec<char>` instead of `String` for the alphabet?
-3. What are the memory implications of a dynamic `Vec`?
-4. How can you iterate without taking ownership of the elements?
+1. what’s the difference between `push` and `extend`?
+2. why choose `vec<char>` instead of `string` for the alphabet?
+3. what are the memory implications of a dynamic `vec`?
+4. how can you iterate without taking ownership of the elements?
 
-**Success criteria**
+**success criteria**
 
-* `Vec` built correctly based on the config.
-* No unnecessary code duplication.
-* Functional iteration.
+* `vec` built correctly based on the config.
+* no unnecessary code duplication.
+* functional iteration.
 
 ---
 
@@ -255,10 +255,16 @@ Split your code:
 **Practical task**
 Implement a CLI that accepts:
 
+AI asked me this :
 * `--length <n>`
 * `--upper` / `--no-upper`
 * `--digits` / `--no-digits`
 * `--specials` / `--no-specials`
+
+I intentionaly changed the task :
+* -l 8 --charset luds : a 8 char long password including all chars
+* -l 14 --charset lu : a 14 char long password including only lower and uppercases
+* if no lenghth or charset composition are provided, use the config.txt, if no config.txt, use default values
 
 **Reference chapters**
 
