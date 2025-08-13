@@ -1,5 +1,5 @@
 use clap::Parser;
-use crate::parse_config::PasswordConfig;
+use crate::passwordconfig::PasswordConfig;
 
 #[derive(Parser)]
 #[command(name = "PasswordGenerator.rs")]

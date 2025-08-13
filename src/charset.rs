@@ -1,4 +1,5 @@
-use crate::PasswordConfig;
+use crate::passwordconfig::PasswordConfig;
+//je comprend pas pourquoi ici je dois indiquer crate
 
 const LOWERCASE: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
