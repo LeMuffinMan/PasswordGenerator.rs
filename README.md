@@ -4,9 +4,61 @@ A simple, fast CLI to generate strong passwords with configurable length and cha
 
 ## Demo 
 
-![Password Generator Demo](assets/cassette.gif)
+![Password Generator Demo](assets/cassette_little.gif)
 
 *Demo created with [VHS](https://github.com/charmbracelet/vhs)*
+
+## Pedagogy
+
+This project was my first Rust application, designed as a learning exercise to explore the language fundamentals and ecosystem. Here's what I learned by building this password generator:
+
+### Rust Language Fundamentals
+- **Ownership & Borrowing**: Managing memory safety without garbage collection
+- **Pattern Matching**: Using `match`, `if let`, and handling `Option`/`Result` types
+- **Error Handling**: The `?` operator and `Result<T, E>` pattern for robust error propagation
+- **Structs & Implementations**: Organizing data with `struct` and adding behavior with `impl` blocks
+- **Traits**: Understanding `Default`, `Debug`, and deriving common functionality
+- **Modules**: Code organization with `mod`, `use`, and visibility (`pub`)
+
+### Cargo Ecosystem
+- **Project Management**: `cargo new`, `cargo run`, `cargo build --release`
+- **Documentation**: `cargo doc --open` for generating and viewing project docs
+- **Dependencies**: Managing external crates in `Cargo.toml`
+
+### External Crates Integration
+- **[Clap](https://docs.rs/clap/)** (v4): Modern CLI argument parsing with derive macros
+  - `#[derive(Parser)]` for automatic CLI generation
+  - Argument validation, help text, and subcommands
+  - Optional arguments and default values
+  
+- **[Serde](https://docs.rs/serde/)** (v1): Serialization/deserialization framework
+  - `#[derive(Deserialize, Serialize)]` for automatic TOML parsing
+  - `#[serde(default)]` for handling missing configuration fields
+  - Working with `toml::from_str()` and `toml::to_string_pretty()`
+
+### Rust Design Patterns Learned
+- **Builder Pattern**: Constructing complex configurations step-by-step
+- **Method Chaining**: Fluent interfaces for configuration overrides
+- **Type Safety**: Leveraging Rust's type system to prevent runtime errors
+- **Zero-Cost Abstractions**: Writing high-level code without performance penalties
+- **Immutability by Default**: Explicit `mut` for safer, more predictable code
+
+### Development Practices
+- **Configuration Hierarchy**: Defaults → Config File → CLI Arguments (priority order)
+- **Graceful Degradation**: Fallback to safe defaults when config files are missing/invalid
+- **Documentation**: Writing clear docstrings and examples for `cargo doc`
+
+### Key Takeaways
+- **Ecosystem Quality**: High-quality crates with excellent documentation
+- **Memory Safety**: No null pointer dereferences or buffer overflows by design
+
+### 📖 Learning Resources Used
+- [The Rust Programming Language](https://doc.rust-lang.org/book/) (chapters 1-10)
+- [Rust by Example](https://doc.rust-lang.org/rust-by-example/)
+- [Clap Documentation](https://docs.rs/clap/) and examples
+- [Serde Documentation](https://serde.rs/) and TOML integration guides
+
+This project was a discover of a strong type system and helpful compiler messages made learning the language an enjoyable experience.
 
 ## Features
 
