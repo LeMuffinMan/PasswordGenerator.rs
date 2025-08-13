@@ -2,6 +2,10 @@
 
 A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags priority.
 
+## Demo
+
+![Password Generator Demo](assets/demo.gif)
+
 ## Features
 
 - Customizable length and charset : lowercase, uppercase, digits, symbols and password rules
