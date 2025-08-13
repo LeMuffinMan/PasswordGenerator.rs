@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let password = generation(&charset, config.length, config.duplicate);
-    println!("\nGenerated password : {password}");
+    println!("Generated password : {password}");
 
     let entropy = get_entropy(&config, &charset);
     if config.entropy {
@@ -57,7 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if config.json {
         let serialized = serde_json::to_string(&config).unwrap();
-        println!("json: \n{}", serialized);
+        println!("\njson: \n{}", serialized);
     }
 
     Ok(())
