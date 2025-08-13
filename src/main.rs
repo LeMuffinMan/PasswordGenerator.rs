@@ -57,7 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if config.json {
         let serialized = serde_json::to_string(&config).unwrap();
-        println!("config struct serialized int json = {}", serialized);
+        println!("config struct serialized into jso: \n{}", serialized);
     }
 
     Ok(())

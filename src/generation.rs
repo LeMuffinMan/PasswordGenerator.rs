@@ -17,7 +17,7 @@ pub fn generation(charset: &[char], length: u8, duplicate: bool) -> String {
 
     while password.len() < length as usize {
         if let Some(&c) = charset.choose(&mut _rng) {
-                if !duplicate {
+                if duplicate {
                     if password.contains(c) {
                         continue;
                     }
