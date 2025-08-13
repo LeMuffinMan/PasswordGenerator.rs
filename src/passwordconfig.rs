@@ -1,11 +1,10 @@
-
 use serde::{Deserialize, Serialize};
 use std::fs;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PasswordConfig {
     #[serde(default = "default_length")]
-    pub length: u8,
+    pub length: u8, //or usize ?
     #[serde(default = "default_true")]
     pub lowercase: bool,
     #[serde(default = "default_true")]
@@ -24,12 +23,18 @@ pub struct PasswordConfig {
     pub json: bool,
 }
 
-fn default_length() -> u8 { 12 }
-fn default_true() -> bool { true }
-fn default_false() -> bool { false }
+fn default_length() -> u8 {
+    12
+}
+fn default_true() -> bool {
+    true
+}
+fn default_false() -> bool {
+    false
+}
 
 impl Default for PasswordConfig {
-    ///Default builder for our struct, so wihtout config file or without argument we have strong values and only password generation as output 
+    ///Default builder for our struct, so wihtout config file or without argument we have strong values and only password generation as output
     fn default() -> Self {
         PasswordConfig {
             length: default_length(),
@@ -49,29 +54,28 @@ impl PasswordConfig {
     ///Default load from file for config struct. Tries to load the toml, in case of error,
     ///use the default builder to have a ready to use config struct
     pub fn from_file(path: &str) -> Self {
-
         match fs::read_to_string(path) {
             Ok(toml_content) => {
                 if toml_content.trim().is_empty() {
-                    println!("Empty toml file, default values will be use");
+                    println!("Empty toml file, default values will be used");
                     return Self::default();
                 }
-                
+
                 match toml::from_str::<Self>(&toml_content) {
                     Ok(config) => {
                         if config.debug {
-                            println!("config loaded from {}", path);
+                            println!("config loaded from {path}");
                         }
                         config
                     }
                     Err(e) => {
-                        println!("Error parsing {} ({}), default values will be use", path, e);
+                        println!("Error parsing {path} ({e}), default values will be used");
                         Self::default()
                     }
                 }
             }
             Err(_) => {
-                println!("File {} not found, default values will be use", path);
+                println!("File {path} not found, default values will be used");
                 Self::default()
             }
         }
@@ -87,7 +91,5 @@ impl PasswordConfig {
         println!("debug = {}", self.debug);
         println!("entropy = {}", self.entropy);
         println!("json = {}", self.json);
-        println!("");
     }
 }
-

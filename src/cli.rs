@@ -1,16 +1,18 @@
-use clap::Parser;
 use crate::passwordconfig::PasswordConfig;
+use clap::Parser;
 
 #[derive(Parser)]
 #[command(name = "PasswordGenerator.rs")]
 #[command(about = "A simple CLI to generate passwords")]
 #[command(version, about, long_about = None)]
-
-pub struct Cli
-{
-
-    //we need to set a default value here for the config.toml 
-    #[arg(short, long, help = "Path to config file", default_value = "config.toml")]
+pub struct Cli {
+    //we need to set a default value here for the config.toml
+    #[arg(
+        short,
+        long,
+        help = "Path to config file",
+        default_value = "config.toml"
+    )]
     pub file: String,
 
     #[arg(short, long, help = "Length of password")]
@@ -22,26 +24,24 @@ pub struct Cli
         value_name = "CHARSET",
         num_args = 0..=1,
         default_missing_value = "luds" )]
-    pub charset: Option<String>, 
+    pub charset: Option<String>,
 
     #[arg(long, help = "Enable debug output")]
     pub debug: bool,
-    
+
     #[arg(long, help = "Show entropy information")]
     pub entropy: bool,
-    
+
     #[arg(long, help = "Output in JSON format")]
     pub json: bool,
-    
+
     #[arg(long, help = "Allow duplicate characters")]
     pub duplicate: bool,
-    
 }
 
 impl Cli {
     ///Once the config struct is built, we override the settings with the ones Clap parsed
-    pub fn args_override(&self, config: &mut PasswordConfig)
-    {
+    pub fn args_override(&self, config: &mut PasswordConfig) {
         if let Some(length) = self.length {
             config.length = length;
         }
@@ -68,9 +68,8 @@ impl Cli {
     }
     ///Main methode to build the config : tries to parse a TOML config file, or attribute default
     ///value if none are provided or if there is no valid config file available
-    pub fn build_config (&self) -> PasswordConfig {
-
-        let mut config = PasswordConfig::from_file(&self.file); 
+    pub fn build_config(&self) -> PasswordConfig {
+        let mut config = PasswordConfig::from_file(&self.file);
 
         self.args_override(&mut config);
 
@@ -80,8 +79,8 @@ impl Cli {
         //we could print the struct this way but describe() methode is more readable
         // if config.debug {
         //     println!("config struct built: {:?}\n", config);
-        // } 
-        
+        // }
+
         config
     }
 }
