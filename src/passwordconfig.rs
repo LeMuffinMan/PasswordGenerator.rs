@@ -56,7 +56,9 @@ impl PasswordConfig {
                 
                 match toml::from_str::<Self>(&toml_content) {
                     Ok(config) => {
-                        println!("Loading config from {}", path);
+                        if config.debug {
+                            println!("Loading config from {}", path);
+                        }
                         config
                     }
                     Err(e) => {
