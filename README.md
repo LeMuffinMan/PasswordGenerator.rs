@@ -1,15 +1,11 @@
 # PasswordGenerator.rs
 
-A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags taking precedence.
+A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags priority.
 
 ## Features
 
-- Customizable length
-- Select character sets: lowercase, uppercase, digits, symbols
-- Optional duplicate characters (disabled by default)
-- Configurable via `config.toml` or CLI flags
-- Entropy display (Shannon approximation)
-- Debug mode to inspect effective config and charset
+- Customizable length and charset : lowercase, uppercase, digits, symbols and password rules
+- Configurable via `config.toml`, custom config files with --file, or CLI flags
 - JSON output of the effective configuration
 
 ## Install
@@ -20,8 +16,8 @@ Prerequisites: Rust (stable) and Cargo.
 # Build and run locally
 cargo run -- [OPTIONS]
 
-# Or install the binary to your $HOME/.cargo/bin
-cargo install --path .
+# Generate documentation locally and consult it
+cargo doc --open
 ```
 
 ## Usage
@@ -95,14 +91,14 @@ json = false
 ```
 
 Notes:
-- Use `duplicate` as the key name. The key `allow_duplicate` is not recognized.
 - Any missing key falls back to a safe default (shown above).
 - You can point to another file with `--file /path/to/config.toml`.
 - Flags always override file values.
+- use cargo doc --open to generate and consult the documentation.
 
 ## Output
 
-On success, the program prints a password like:
+On success, with no flags, the program prints a password like:
 
 ```text
 Generated password : Bc4p3Jz2QmN7xK
@@ -113,17 +109,9 @@ Optional extra output:
 - With `--json`: prints the effective configuration as a single-line JSON string.
 - With `--debug`: prints the effective configuration and the constructed charset.
 
-## Entropy
-
-The displayed entropy uses the common approximation:
-
-- Entropy ≈ length × log2(charset_size)
-
-This assumes independent draws with replacement. When `--duplicate` is not set (the default), characters are sampled without replacement, which slightly reduces the theoretical entropy per character; the above approximation remains a practical upper bound.
-
 ## Errors and troubleshooting
 
-- "Error : length = 0": set a length > 0.
+- "Error : length = 0": provide a valid length.
 - "Charset empty": you disabled all character sets; enable at least one.
 - "Charset is too small to guarantee no duplicated char": when duplicates are disallowed (default), `length` must be ≤ the size of the effective charset. Either reduce `length`, enable more sets, or pass `--duplicate`.
 
@@ -136,7 +124,3 @@ cargo run -- [OPTIONS]
 # Build release
 cargo build --release
 ```
-
-## License
-
-Specify a license for this project (e.g., MIT, Apache-2.0).
