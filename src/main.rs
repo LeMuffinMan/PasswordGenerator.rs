@@ -65,7 +65,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     //Todo : 
     //- tests unitaires ?
-    //- rust doc ///
     //- Readme
     //
     //- audit de bruteforce 

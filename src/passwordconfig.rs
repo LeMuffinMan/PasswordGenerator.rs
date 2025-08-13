@@ -29,6 +29,7 @@ fn default_true() -> bool { true }
 fn default_false() -> bool { false }
 
 impl Default for PasswordConfig {
+    ///Default builder for our struct, so wihtout config file or without argument we have strong values and only password generation as output 
     fn default() -> Self {
         PasswordConfig {
             length: default_length(),
@@ -45,6 +46,8 @@ impl Default for PasswordConfig {
 }
 
 impl PasswordConfig {
+    ///Default load from file for config struct. Tries to load the toml, in case of error,
+    ///use the default builder to have a ready to use config struct
     pub fn from_file(path: &str) -> Self {
 
         match fs::read_to_string(path) {
@@ -57,7 +60,7 @@ impl PasswordConfig {
                 match toml::from_str::<Self>(&toml_content) {
                     Ok(config) => {
                         if config.debug {
-                            println!("Loading config from {}", path);
+                            println!("config loaded from {}", path);
                         }
                         config
                     }
@@ -73,6 +76,7 @@ impl PasswordConfig {
             }
         }
     }
+    ///we could display our struct with printlin!("{:?}, config") but this is easier to read
     pub fn describe(&self) {
         println!("length = {}", self.length);
         println!("lowercase = {}", self.lowercase);

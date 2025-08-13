@@ -1,6 +1,8 @@
 use crate::passwordconfig::PasswordConfig;
 //je comprend pas pourquoi ici je dois indiquer crate
 
+//interet de declarer les charsets en const plutot que direct dans la seule fonction qui les
+//utilise ?
 const LOWERCASE: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
     'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
@@ -20,6 +22,7 @@ const SYMBOL: [char; 10] = ['!', '@', '#', '$', '%',
     '^', '&', '*', '(', ')'];
 
 
+///Following the config struct, we compose the charset with the methode extend_from_slice
 pub fn fill_charset(config: &PasswordConfig)
     -> Result<Vec<char>, Box<dyn std::error::Error>>
 {
