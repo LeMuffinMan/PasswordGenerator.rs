@@ -1,37 +1,76 @@
 
-use std::error::Error;
+use serde::{Deserialize, Serialize};
+use std::fs;
 
-const LOWERCASE: [char; 26] = [
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
-    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 
-    'u', 'v', 'w', 'x', 'y', 'z',
-];
-
-const UPPERCASE: [char; 26] = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
-    'U', 'V', 'W', 'X', 'Y', 'Z',
-];
-
-const DIGIT: [char; 10] = ['0', '1', '2', '3', '4',
-    '5', '6', '7', '8', '9'];
-
-const SYMBOL: [char; 10] = ['!', '@', '#', '$', '%',
-    '^', '&', '*', '(', ')'];
-
+#[derive(Debug, Deserialize, Serialize)]
 pub struct PasswordConfig {
+    #[serde(default = "default_length")]
     pub length: u8,
+    #[serde(default = "default_true")]
     pub lowercase: bool,
+    #[serde(default = "default_true")]
     pub uppercase: bool,
+    #[serde(default = "default_true")]
     pub digit: bool,
+    #[serde(default = "default_false")]
     pub symbol: bool,
+    #[serde(default = "default_false")]
     pub duplicate: bool,
+    #[serde(default = "default_false")]
     pub debug: bool,
+    #[serde(default = "default_false")]
     pub entropy: bool,
+    #[serde(default = "default_false")]
     pub json: bool,
 }
 
+fn default_length() -> u8 { 12 }
+fn default_true() -> bool { true }
+fn default_false() -> bool { false }
+
+impl Default for PasswordConfig {
+    fn default() -> Self {
+        PasswordConfig {
+            length: default_length(),
+            lowercase: default_true(),
+            uppercase: default_true(),
+            digit: default_true(),
+            symbol: default_false(),
+            duplicate: default_false(),
+            debug: default_false(),
+            entropy: default_false(),
+            json: default_false(),
+        }
+    }
+}
+
 impl PasswordConfig {
+    pub fn from_file(path: &str) -> Self {
+
+        match fs::read_to_string(path) {
+            Ok(toml_content) => {
+                if toml_content.trim().is_empty() {
+                    println!("Empty toml file, default values will be use");
+                    return Self::default();
+                }
+                
+                match toml::from_str::<Self>(&toml_content) {
+                    Ok(config) => {
+                        println!("Loading config from {}", path);
+                        config
+                    }
+                    Err(e) => {
+                        println!("Error parsing {} ({}), default values will be use", path, e);
+                        Self::default()
+                    }
+                }
+            }
+            Err(_) => {
+                println!("File {} not found, default values will be use", path);
+                Self::default()
+            }
+        }
+    }
     pub fn describe(&self) {
         println!("length = {}", self.length);
         println!("lowercase = {}", self.lowercase);
@@ -46,91 +85,3 @@ impl PasswordConfig {
     }
 }
 
-fn which_key(key: &str, value: &str, config: &mut PasswordConfig) -> Result<(), Box<dyn Error>> { 
-
-    let key = key.trim();
-    let value = value.trim();
-
-    match key {
-        "length" => {
-            config.length = value.parse()?;
-            Ok(())
-        }
-        "lowercase" => {
-            config.lowercase = value.parse()?;
-            Ok(())
-        }
-        "uppercase" => {
-            config.uppercase = value.parse()?;
-            Ok(())
-        }
-        "digit" => {
-            config.digit = value.parse()?;
-            Ok(())
-        }
-        "symbol" => {
-            config.symbol = value.parse()?;
-            Ok(())
-        }
-        "allow_duplicate" => {
-            config.duplicate = value.parse()?;
-            Ok(())
-        }
-        "debug" => {
-            config.debug = value.parse()?;
-            Ok(())
-        }
-        "entropy" => {
-            config.entropy = value.parse()?;
-            Ok(())
-        }
-        "json" => {
-            config.json = value.parse()?;
-            Ok(())
-        }
-        _ => {
-            return Err(format!("Error : unknown key {key}").into());
-        }
-    }
-
-}
-
-pub fn get_value_from_line(line: &str, config: &mut PasswordConfig) -> Result<(), Box<dyn Error>> {
-    
-    let line = line.trim();
-
-        if line.is_empty() || line.starts_with('#') {
-            return Ok(());
-        }
-
-        if let Some((key, value)) = line.split_once('=') {
-            which_key(key, value, config)?;
-        } else {
-            return Err(format!("Error : invalid line : {line}").into())
-        }
-    Ok(())
-}
-
-pub fn fill_charset(config: &PasswordConfig)
-    -> Result<Vec<char>, Box<dyn std::error::Error>>
-{
-    let mut charset: Vec<char> = Vec::new();
-    if config.lowercase {
-        charset.extend_from_slice(&LOWERCASE);
-    }
-    if config.uppercase {
-        charset.extend_from_slice(&UPPERCASE);
-    }
-    if config.digit {
-        charset.extend_from_slice(&DIGIT);
-    }
-    if config.symbol {
-        charset.extend_from_slice(&SYMBOL);
-    }
-
-    if charset.is_empty() {
-        return Err("Charset empty".into());
-    }
-
-    Ok(charset)
-}
