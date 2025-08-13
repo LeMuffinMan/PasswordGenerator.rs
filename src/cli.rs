@@ -8,21 +8,38 @@ use crate::parse_config::PasswordConfig;
 
 pub struct Cli
 {
-    #[arg(short, long, help = "lenght : -l 7 or --length 7")]
+
+    #[arg(short, long, help = "Path to config file", default_value = "config.toml")]
+    pub file: String,
+
+    #[arg(short, long, help = "Length of password")]
     pub length: Option<u8>,
 
     #[arg(short,
         long,
-        help = "--charset luds activates l(owercase), u(ppercase), d(igit), s(ymbol)", 
+        help = "\"luds\" activates l(owercase), u(ppercase), d(igit), s(ymbol)", 
         value_name = "CHARSET",
         num_args = 0..=1,
         default_missing_value = "luds" )]
     pub charset: Option<String>, 
+
+    #[arg(long, help = "Enable debug output")]
+    pub debug: bool,
+    
+    #[arg(long, help = "Show entropy information")]
+    pub entropy: bool,
+    
+    #[arg(long, help = "Output in JSON format")]
+    pub json: bool,
+    
+    #[arg(long, help = "Allow duplicate characters")]
+    pub duplicate: bool,
+    
 }
 
 impl Cli {
-    pub fn get_args_override(&self, config: &mut PasswordConfig) {
-        
+    pub fn args_override(&self, config: &mut PasswordConfig)
+    {
         if let Some(length) = self.length {
             config.length = length;
         }
@@ -32,44 +49,35 @@ impl Cli {
             config.uppercase = cs.contains('u');
             config.digit = cs.contains('d');
             config.symbol = cs.contains('s');
-            //flags entropy debug et json
+        }
+
+        if self.debug {
+            config.debug = true;
+        }
+        if self.entropy {
+            config.entropy = true;
+        }
+        if self.json {
+            config.json = true;
+        }
+        if self.duplicate {
+            config.duplicate = true;
         }
     }
-}
-    // pub fn to_config_or_default(&self) -> PasswordConfig {
-    //
-    //     let length = self.length.unwrap_or(15);
+    pub fn build_config (&self) -> PasswordConfig {
 
-        //declarer un tuple de 4 elements pour les 4 bool du charset
-        //il faut utilise ref dans le some, pour borrow charset sans le modifier, on lit simplement
-        //si on a eu --charset sans rien on entre dnas la bracket : on cherche chaque char, cs.contains
-        //renvoie un bool, et est attribue en fonction de la position des charset dans le tuple que
-        //j'ai declare, d'ou le premier '=' !!   ICI, d'ou aussi la parenthese autour des cs.contains
-        // let (lowercase, uppercase, digit, symbol) = if let Some(ref cs) = self.charset {
-        //     (
-            //ici cs, est une variable cree pour operer sur une copie de charset, avec la methode contains
-                //pourquoi le shadowing n'est pas possible et je dois passer par cs ?
-            //     cs.contains('l'),
-            //     cs.contains('u'),
-            //     cs.contains('d'),
-            //     cs.contains('s'),
-            // )
-        //si charset est None (pas renseigne en arg), on passe dans le else et on donne des valeurs par
-        //defaut
-        // } else {
-        //     (true, true, true, true)
-        // };
-        //Maintenant qu'on a la length, et un tupe de 4 elements pour le charset, on creer une
-        //nouvelle instance de PasswordConfig et on l'initalise avec length, et les elements de
-        //notre tuple
-        // let mut config = PasswordConfig {
-        //     length: length,
-        //     lowercase: lowercase,
-        //     uppercase: uppercase,
-        //     digit: digit,
-        //     symbol: symbol,
-        // };
-        // return config
-        //pas de ; et derniere instruction de la fonction -> c'est son return
-    // }
-// }
+        //Clap had parsed a toml path, or attributed a default value, cli.config always exists
+        let mut config = PasswordConfig::from_file(&self.file); 
+
+        self.args_override(&mut config);
+
+        if config.debug {
+            config.describe();
+        }
+
+        if config.debug {
+            println!("Configuration finale: {:?}", config); //we can print the struct like this ??
+        } 
+        config
+    }
+}
