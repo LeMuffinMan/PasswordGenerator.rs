@@ -9,6 +9,7 @@ use crate::passwordconfig::PasswordConfig;
 pub struct Cli
 {
 
+    //we need to set a default value here for the config.toml 
     #[arg(short, long, help = "Path to config file", default_value = "config.toml")]
     pub file: String,
 
@@ -38,6 +39,7 @@ pub struct Cli
 }
 
 impl Cli {
+    ///Once the config struct is built, we override the settings with the ones Clap parsed
     pub fn args_override(&self, config: &mut PasswordConfig)
     {
         if let Some(length) = self.length {
@@ -64,9 +66,10 @@ impl Cli {
             config.duplicate = true;
         }
     }
+    ///Main methode to build the config : tries to parse a TOML config file, or attribute default
+    ///value if none are provided or if there is no valid config file available
     pub fn build_config (&self) -> PasswordConfig {
 
-        //Clap had parsed a toml path, or attributed a default value, cli.config always exists
         let mut config = PasswordConfig::from_file(&self.file); 
 
         self.args_override(&mut config);
@@ -74,11 +77,11 @@ impl Cli {
         if config.debug {
             config.describe();
         }
-
         //we could print the struct this way but describe() methode is more readable
         // if config.debug {
-        //     println!("config struct built: {:?}\n", config); //we can print the struct like this ??
+        //     println!("config struct built: {:?}\n", config);
         // } 
+        
         config
     }
 }
