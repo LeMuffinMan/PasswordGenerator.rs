@@ -4,7 +4,7 @@ A simple, fast CLI to generate strong passwords with configurable length and cha
 
 ## Demo 
 
-![Password Generator Demo](assets/cassette_little.gif)
+![Password Generator Demo](assets/cassette.gif)
 
 *Demo created with [VHS](https://github.com/charmbracelet/vhs)*
 
