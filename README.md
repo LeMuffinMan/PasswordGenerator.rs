@@ -2,12 +2,6 @@
 
 A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags priority.
 
-## Demo 
-
-![Password Generator Demo](assets/cassette.gif)
-
-*Demo created with [VHS](https://github.com/charmbracelet/vhs)*
-
 ## Pedagogy
 
 This project was my first Rust application, designed as a learning exercise to explore the language fundamentals and ecosystem. Here's what I learned by building this password generator:
@@ -65,6 +59,12 @@ This project was a discover of a strong type system and helpful compiler message
 - Customizable length and charset : lowercase, uppercase, digits, symbols and password rules
 - Configurable via `config.toml`, custom config files with --file, or CLI flags
 - JSON output of the effective configuration
+
+## Demo 
+
+![Password Generator Demo](assets/cassette.gif)
+
+*Demo created with [VHS](https://github.com/charmbracelet/vhs)*
 
 ## Install
 
