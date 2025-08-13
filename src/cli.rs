@@ -75,9 +75,10 @@ impl Cli {
             config.describe();
         }
 
-        if config.debug {
-            println!("Configuration finale: {:?}", config); //we can print the struct like this ??
-        } 
+        //we could print the struct this way but describe() methode is more readable
+        // if config.debug {
+        //     println!("config struct built: {:?}\n", config); //we can print the struct like this ??
+        // } 
         config
     }
 }
