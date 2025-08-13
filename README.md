@@ -2,9 +2,11 @@
 
 A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags priority.
 
-## Demo
+## Demo 
 
-![Password Generator Demo](assets/demo.gif)
+![Password Generator Demo](assets/cassette.gif)
+
+*Demo created with [VHS](https://github.com/charmbracelet/vhs)*
 
 ## Features
 
