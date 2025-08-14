@@ -70,6 +70,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 // - charset building from config (all flag combinations)
 // - generation with and without duplicates (length, uniqueness invariants)
 // - entropy accuracy with and without replacement
+// - CI pour la doc 
 //
 //- audit de bruteforce
 //- integration bitwarden
