@@ -33,11 +33,15 @@ jobs:
     - name: Build documentation
       run: cargo doc --no-deps --all-features
 
-    # store the target/doc so the next job can use it
+    # cargo doc generate doc in target/doc so we need to change the root for the Github Page
+    - name: Prepare GitHub Pages artifact
+      run: |
+        mkdir -p gh-pages
+        cp -r target/doc/<nom_de_ton_crate>/* gh-pages/
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v1
       with:
-        path: target/doc
+        path: gh-pages
 
   deploy:
     needs: build # indicate that the last job "build" must be done to start
