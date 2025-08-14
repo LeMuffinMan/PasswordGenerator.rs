@@ -2,6 +2,8 @@
 
 A simple, fast CLI to generate strong passwords with configurable length and character sets. Configuration can be provided via flags or a TOML file, with flags priority.
 
+Documentation generated with cargo doc and automated with github actions is available here : https://lemuffinman.github.io/PasswordGenerator.rs
+
 ## Pedagogy
 
 This project was my first Rust application, designed as a learning exercise to explore the language fundamentals and ecosystem. Here's what I learned by building this password generator:
@@ -41,9 +43,7 @@ This project was my first Rust application, designed as a learning exercise to e
 - **Configuration Hierarchy**: Defaults → Config File → CLI Arguments (priority order)
 - **Graceful Degradation**: Fallback to safe defaults when config files are missing/invalid
 - **Documentation**: Writing clear docstrings and examples for `cargo doc`
-- **CI Documentation Deployment**: Automatic generation and deployment of Rust docs to GitHub Pages on each push to `main`
-
-- https://lemuffinman.github.io/PasswordGenerator.rs
+- **CI Documentation Deployment**: Automatic generation and deployment of Rust docs to GitHub Pages on each push to `main` 
 
 ### Key Takeaways
 - **Ecosystem Quality**: High-quality crates with excellent documentation
