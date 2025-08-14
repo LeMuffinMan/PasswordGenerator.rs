@@ -41,6 +41,9 @@ This project was my first Rust application, designed as a learning exercise to e
 - **Configuration Hierarchy**: Defaults → Config File → CLI Arguments (priority order)
 - **Graceful Degradation**: Fallback to safe defaults when config files are missing/invalid
 - **Documentation**: Writing clear docstrings and examples for `cargo doc`
+- **CI Documentation Deployment**: Automatic generation and deployment of Rust docs to GitHub Pages on each push to `main`
+
+- https://lemuffinman.github.io/PasswordGenerator.rs
 
 ### Key Takeaways
 - **Ecosystem Quality**: High-quality crates with excellent documentation
