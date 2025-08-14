@@ -37,7 +37,7 @@ jobs:
     - name: Prepare GitHub Pages artifact
       run: |
         mkdir -p gh-pages
-        cp -r target/doc/<nom_de_ton_crate>/* gh-pages/
+        cp -r target/doc/PasswordGenerator/* gh-pages/
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
