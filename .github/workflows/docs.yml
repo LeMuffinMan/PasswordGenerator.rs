@@ -14,7 +14,7 @@ permissions:
   pages: write
 
 jobs: 
-  bluid:
+  build:
     runs-on: ubuntu-latest
     steps: 
     # This clone the repo in the remote VM for next steps
@@ -23,7 +23,7 @@ jobs:
 
     # Installs rust on the remote VM 
     - name: Install Rust
-    - uses: actions-rs/toolchain@v1
+      uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         override: true
