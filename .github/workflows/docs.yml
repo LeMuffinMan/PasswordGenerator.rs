@@ -21,7 +21,7 @@ jobs:
     - name: Checkout code 
       uses: actions/checkout@v4
 
-      # Installs rust on the remote VM 
+    # Installs rust on the remote VM 
     - name: Install Rust
     - uses: actions-rs/toolchain@v1
       with:
@@ -39,13 +39,11 @@ jobs:
         path: target/doc
 
   deploy:
-    # indicate that the last job "build" must be done to start
-    needs: build
+    needs: build # indicate that the last job "build" must be done to start
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      # allow to have the link for the github pages at the end of the deployment
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }} # allow to have the link for the github pages at the end of the deployment
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
