@@ -9,13 +9,9 @@ on:
 
 # allow to read the repo content
 # allow to edit on Github Pages
-# id-token : safe auth : give permission to my workflow to generate a temp token signed by github
-# it proves that the request is from a job Github Actions from this repo
-# The token will be consummed at the rule deploy-pages to release the doc on Github Pages, without storing any credentials
 permissions:
   contents: read
   pages: write
-  id_token: write
 
 jobs: 
   bluid:
