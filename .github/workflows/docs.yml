@@ -1,0 +1,57 @@
+
+name: Deploy Rust Docs
+
+# Will trigger for each push on main
+on:
+  push:
+    branches:
+      - main
+
+# allow to read the repo content
+# allow to edit on Github Pages
+# id-token : safe auth : give permission to my workflow to generate a temp token signed by github
+# it proves that the request is from a job Github Actions from this repo
+# The token will be consummed at the rule deploy-pages to release the doc on Github Pages, without storing any credentials
+permissions:
+  contents: read
+  pages: write
+  id_token: write
+
+jobs: 
+  bluid:
+    runs-on: ubuntu-latest
+    steps: 
+    # This clone the repo in the remote VM for next steps
+    - name: Checkout code 
+      uses: actions/checkout@v4
+
+      # Installs rust on the remote VM
+    - name: Install Rust
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    # runs the command cargo doc : no deps for lightweight site
+    - name: Build documentation
+      run: cargo doc --no-deps --all-features
+
+    # store the target/doc so the next job can use it
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: target/doc
+
+  deploy:
+    # indicate that the last job "build" must be done to start
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      # allow to have the link for the github pages at the end of the deployment
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # this is the artifact we generated at end of build job
+
