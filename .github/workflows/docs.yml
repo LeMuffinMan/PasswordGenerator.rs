@@ -25,7 +25,7 @@ jobs:
     - name: Checkout code 
       uses: actions/checkout@v4
 
-      # Installs rust on the remote VM
+      # Installs rust on the remote VM 
     - name: Install Rust
     - uses: actions-rs/toolchain@v1
       with:
