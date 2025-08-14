@@ -14,43 +14,64 @@ permissions:
   pages: write
   id-token: write
 
+# Prevent concurrent deployments from conflicting
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs: 
   build:
     runs-on: ubuntu-latest
     steps: 
-    # This clone the repo in the remote VM for next steps
+    # This clones the repo in the remote VM for next steps
     - name: Checkout code 
       uses: actions/checkout@v4
 
     # Installs rust on the remote VM 
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
 
-    # runs the command cargo doc : no deps for lightweight site
-    - name: Build documentation
-      run: cargo doc --no-deps --all-features
+    # Configure caching for Rust builds to speed up workflow
+    - name: Configure cache
+      uses: Swatinem/rust-cache@v2
 
-    # cargo doc generate doc in target/doc so we need to change the root for the Github Page
-    - name: Prepare GitHub Pages artifact
-      run: |
-        mkdir -p gh-pages
-        cp -r target/doc/PasswordGenerator/* gh-pages/
+    # Prepare GitHub Pages deployment
+    - name: Setup pages
+      id: pages
+      uses: actions/configure-pages@v5
+
+    # Clean docs folder to avoid stale files
+    - name: Clean docs folder
+      run: cargo clean --doc
+
+    # Run the command cargo doc: no deps for lightweight site
+    - name: Build docs
+      run: cargo doc --no-deps
+
+    # Add redirect so root of GitHub Pages points to crate doc
+    - name: Add redirect
+      run: echo '<meta http-equiv="refresh" content="0;url=PasswordGenerator/index.html">' > target/doc/index.html
+
+    # Remove lock file that the new Pages deployment method doesn't like
+    - name: Remove lock file
+      run: rm target/doc/.lock
+
+    # Upload generated docs as artifact for deployment
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: gh-pages
+        path: target/doc
 
   deploy:
-    needs: build # indicate that the last job "build" must be done to start
+    # indicate that the last job "build" must be done to start
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }} # allow to have the link for the github pages at the end of the deployment
+      url: ${{ steps.deployment.outputs.page_url }} # allow to have the link for the GitHub Pages at the end of the deployment
     steps:
+      # Deploy the artifact to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # this is the artifact we generated at end of build job
+        uses: actions/deploy-pages@v4
 
