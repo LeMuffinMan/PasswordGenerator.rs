@@ -12,10 +12,6 @@ use passwordconfig::PasswordConfig;
 mod charset;
 use charset::fill_charset;
 
-// - Entropy = length * log2(|charset|) assumes independent draws with replacement.
-// - If duplicates are disallowed, the correct model is sampling without replacement: log2(P(n, k)) where P(n, k) = n!/(n-k)!
-// - Fix: Compute both cases accurately and display the one matching the active mode.
-//                                                  &[char] ?
 fn get_entropy(config: &PasswordConfig, charset: &Vec<char>) -> f64 {
     let charset_size: f64 = charset.len() as f64;
     let entropy: f64 = config.length as f64 * charset_size.log2();
